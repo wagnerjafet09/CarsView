@@ -1,0 +1,437 @@
+﻿@model List<WAPS08.Models.ViewModels.AutoTableViewModel>
+@{
+    ViewBag.Title = "Muetrario de Vehiculos en Venta";
+    Layout = "~/Views/Shared/_LayoutVista.cshtml";
+}
+
+
+
+<br />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @*<link href="@Url.Content("~/Content/footer.css")" rel="stylesheet" type="text/css" />*@
+    <title>CarsView</title>
+    <style>
+        body {
+            padding: 0%;
+            margin: 0%;
+        }
+
+        h3 {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        p {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        .car-card {
+            margin-bottom: 20px;
+        }
+
+        .car-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5%;
+        }
+
+        #fila {
+            border-radius: 15px;
+            padding: 10px;
+            margin: 40px;
+            box-shadow: 1px 1px 2px 2px black;
+        }
+
+        .boton-volver {
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #333;
+            border: 2px solid #333;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+            .boton-volver:hover {
+                background-color: #333;
+                color: #fff;
+            }
+
+
+        .boton-editar {
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #808080;
+            border: 2px solid #808080;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+
+
+            .boton-editar:hover {
+                background-color: #808080;
+                color: white;
+                border: 2px solid #333;
+            }
+
+
+
+        .boton-eliminar {
+            padding: 10px 20px;
+            background-color: #fff;
+            color: darkred;
+            border: 2px solid darkred;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+
+
+
+            .boton-eliminar:hover {
+                background-color: darkred;
+                color: #fff;
+                border: 2px solid #333;
+            }
+
+        .boton-cargarimg {
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #0026ff;
+            border: 2px solid #333;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+            .boton-cargarimg:hover {
+                background-color: #0026ff;
+                color: #fff;
+            }
+
+        .imagen-destacada {
+            padding: 0%;
+            margin: auto;
+            transition: transform 0.3s, filter 0.3s;
+            width: 197px;
+            height: auto;
+            overflow: hidden;
+        }
+
+            .imagen-destacada:hover {
+                transform: scale(1.8);
+                filter: brightness(140%);
+            }
+
+        .Cajas:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 16px rgb(0,0,0,0.2);
+            background-color: rgba(85, 88, 88, 0.171);
+            filter: brightness(120%);
+
+
+
+        }
+
+
+        /* Estilos para la ventana emergente */
+        .chat-popup {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            width: 250px; /* Ancho fijo de la ventana emergente */
+            height: 250px; /* Altura fija de la ventana emergente */
+        }
+
+        .chat-content {
+            position: relative;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        #mensajesenchat {
+            max-width: 250px;
+            overflow-x: hidden;
+            margin-top: 10px;
+            overflow-y: auto;
+            flex-grow: 1; /* El componente de mensajes crecerá para llenar el espacio restante */
+        }
+
+        #mensajesenchat li{
+            text-decoration: none;
+        }
+
+            .chat-inputs {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding-top: 10px; /* Espacio entre los mensajes y la caja de texto */
+            }
+
+            .chat-popup-button,
+            .chat-inputs input {
+                margin-right: 10px; /* Espacio entre los elementos */
+            }
+
+
+
+
+
+        /* Estilos para el botón emergente */
+        .chat-popup-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #botonIniciarChat2{
+            display: none;
+        }
+
+        .chat-popup {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chat-input-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .chat-send-button {
+            flex-shrink: 0;
+        }
+
+    </style>
+</head>
+<br />
+<br />
+<br />
+<h2 style="font-family: Georgia, 'Times New Roman', Times, serif; text-align:center">Vehiculos en Venta</h2>
+
+<body>
+    <div class="row">
+        @if (Model == null || Model.Count == 0)
+        {
+            <div class="row" style="max-width: 1160px; margin-left:4px;  ">
+                <div class="col-lg-3" id="fila" style="padding: 1%; ">
+                    <div class="car-card" style=" text-align: center;">
+                        <img class="imagen-destacada" src="~/Content/Img/AgregarImg.png" style="cursor: pointer; margin-top: 15px" value="Nuevo" onclick="document.location.href='@Url.Content("~/Auto/AddAuto")'">
+                    </div>
+                    <div style=" text-align: right;">
+                        <input type="button" class="boton-volver" style="margin-top : 54px" value="Volver Atras" onclick="document.location.href = '@Url.Content("~/")'" />
+                    </div>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            foreach (WAPS08.Models.ViewModels.AutoTableViewModel item in Model)
+            {
+                <div class="col-lg-3 Cajas" id="fila">
+                    <div class="car-card">
+                        <img style=" cursor: pointer;" onclick="document.location.href='@Url.Content("~/Auto/Details/" + item._Idauto)'" src="@item._Imagen" class="car-image">
+                        <h3>@item._Marca</h3>
+                        <p>Ubicacion: @item._Direccion</p>
+                        <div class="btn-group" style="display:inline;">
+                            <button type="button" class="btn btn-sm btn-outline-secondary boton-editar" value="Editar" onclick="document.location.href='@Url.Content("~/Auto/EditAuto/" + item._Idauto)'">Edit</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary boton-eliminar" value="Borrar" onclick="jsDelete(@item._Idauto);">Eliminar</button>
+
+                        </div>
+                        <p class="text-body-secondary" style="text-align:end; margin-top: 7%">
+                            <font>
+                                $@item._Precio
+                            </font>
+                        </p>
+
+                    </div>
+                </div>
+            }
+            <div class="row" style="max-width: 1160px; margin-left:4px;  ">
+                <div class="col-lg-3" id="fila" style="padding: 1%; ">
+                    <div class="car-card" style=" text-align: center; ">
+                        <img class="imagen-destacada" src="~/Content/Img/AgregarImg.png" style="cursor: pointer; margin-top: 15px" value="Nuevo" onclick="document.location.href='@Url.Content("~/Auto/AddAuto")'">
+                    </div>
+                    <div style=" text-align: right;">
+                        <input type="button" class="boton-volver" style="margin-top : 54px" value="Volver Atras" onclick="document.location.href = '@Url.Content("~/")'" />
+                    </div>
+                </div>
+
+            </div>
+
+
+        }
+
+    <div class="chat">
+        <!-- Botón para abrir la ventana emergente -->
+        <button type="button" class="btn btn-primary chat-popup-button" id="botonIniciarChat">Abrir Chat</button>
+        <button type="button" class="btn btn-primary chat-popup-button" id="botonIniciarChat2">Abrir Chat</button>
+
+        <!-- Ventana emergente -->
+        <div class="chat-popup" id="chatPopup">
+            <div class="chat-content">
+                <ul id="mensajesenchat"></ul>
+                <span class="close-button" id="botonCerrarChat">&times;</span>
+                <!-- Contenido del chat (caja de texto y botón de enviar) -->
+                <div class="chat-input-container">
+                    <input type="text" class="form-control chat-input" id="cajamensaje" />
+                    <input type="button" class="btn btn-success chat-send-button" id="botonenviar" value="Enviar" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    </div>
+
+
+</body>
+<br />
+
+@section scripts{
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+    <script>
+    function jsDelete(Id) {
+        if (confirm("Estas seguro de borrar?")) {
+            url = "@Url.Content("~/Auto/DeleteAuto")" + "/" + Id;
+            $.post(url, function (data) {
+                if (data == "1") {
+                    document.location.href = "@Url.Content("~/Auto/query")"
+                } else {
+                    alert("Ocurrio un error :(")
+                }
+            })
+        }
+    }
+
+    </script>
+
+
+
+    @*Aqui empieza la configuracion del chatroom*@
+
+    <script src="~/Scripts/jquery.signalR-2.4.3.min.js"></script>
+    <script src="/signalr/hubs"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var chat = $.connection.chatHub;
+
+            
+
+            chat.client.EnviarMensaje = function (usuario, mensaje) {
+                var divnombre = $("<div/>").text(usuario).html();
+                var divmensaje = $("<div/>").text(mensaje).html();
+                $("#mensajesenchat").append("<li>" + "<b>" + divnombre + "</b>" + ": " + divmensaje + "</li>");
+            };
+
+            // Configura el evento clic del botón "Iniciar Chat"
+            $("#botonIniciarChat").click(function () {
+                
+                var nombreusuario = prompt("Escribe tu nombre: ", "");
+                if (nombreusuario) { // Verifica si se ingresó un nombre
+
+                    /*$("#mensajesenchat").empty();*/
+
+                    $("#cajamensaje").focus();
+
+                    // Inicia la conexión con el hub de SignalR
+                    $.connection.hub.start().done(function () {
+                        // Configura el evento clic del botón "Enviar"
+                        $("#botonenviar").click(function () {
+                            var mensajeenviar = $("#cajamensaje").val();
+                            chat.server.send(nombreusuario, mensajeenviar);
+                            $("#cajamensaje").val("").focus();
+                        });
+                    });
+                }
+            });
+        });
+    </script>
+
+
+    @*PopUp*@
+
+    <script>
+        const openChatroomButton = document.getElementById('botonIniciarChat');
+        const chatPopup = document.getElementById('chatPopup');
+        const closeChatroomButton = document.getElementById('botonCerrarChat');
+
+        const openChatroomButton2 = document.getElementById('botonIniciarChat2');
+
+        openChatroomButton.addEventListener('click', () => {
+            chatPopup.style.display = 'block';
+
+            openChatroomButton.style.display = 'none';
+        });
+
+        closeChatroomButton.addEventListener('click', () => {
+            chatPopup.style.display = 'none';
+
+            openChatroomButton2.style.display = 'block';
+        });
+
+        openChatroomButton2.addEventListener('click', () => {
+            chatPopup.style.display = 'block';
+
+            openChatroomButton2.style.display = 'none';
+        });
+
+        
+    </script>
+
+}
